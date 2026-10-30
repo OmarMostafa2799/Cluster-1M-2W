@@ -3,7 +3,7 @@ resource "aws_instance" "master" {
   ami           = "ami-0056d98d3e05cdbd9"
   instance_type = "t3.medium"
   subnet_id     = aws_subnet.public-subnet.id
-  private_ip                  = "10.20.0.11"
+  private_ip                  = "10.0.1.11"
   security_groups = [aws_security_group.grafana.id]
   availability_zone = "eu-west-1a"
   associate_public_ip_address = true
@@ -24,7 +24,7 @@ resource "aws_instance" "workers" {
   ami           = "ami-0056d98d3e05cdbd9"
   instance_type = "t2.small"
   subnet_id     = aws_subnet.private-subnet.id
-  private_ip = count.index == 0 ? "10.20.1.13" : "10.20.1.14"
+  private_ip = count.index == 0 ? "10.0.2.12" : "10.0.2.13"
   security_groups = [aws_security_group.worker.id]
   availability_zone = "eu-west-1a"
  #user_data = "${file("install-prometheus.sh")}"
@@ -50,11 +50,9 @@ resource "aws_key_pair" "my-key" {
  resource "local_file" "inventory" {
    filename = "../ansible/inventory"
    content  = <<EOT
- [grafana]
- ${aws_instance.grafana.public_ip}
+ [master]
+ ${aws_instance.master.public_ip}
 
- [prometheus]
- ${aws_instance.prometheus.private_ip}
 
  [workers]
  %{for worker in aws_instance.workers~}
