@@ -4,7 +4,7 @@ resource "aws_instance" "master" {
   instance_type = "t3.medium"
   subnet_id     = aws_subnet.public-subnet.id
   private_ip                  = "10.0.1.11"
-  security_groups = [aws_security_group.grafana.id]
+  security_groups = [aws_security_group.cluster-sg.id]
   availability_zone = "eu-west-1a"
   associate_public_ip_address = true
  #user_data = "${file("install-grafana.sh")}"
@@ -25,7 +25,7 @@ resource "aws_instance" "workers" {
   instance_type = "t2.small"
   subnet_id     = aws_subnet.private-subnet.id
   private_ip = count.index == 0 ? "10.0.2.12" : "10.0.2.13"
-  security_groups = [aws_security_group.worker.id]
+  security_groups = [aws_security_group.cluster-sg.id]
   availability_zone = "eu-west-1a"
  #user_data = "${file("install-prometheus.sh")}"
  #user_data_replace_on_change = true
