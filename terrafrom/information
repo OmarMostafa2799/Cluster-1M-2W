@@ -1,4 +1,12 @@
+can use this in cluster 
+vpc: 10.0.0.0/16
+master subnet: 10.0.1.0/24
+worker subnet: 10.0.2.0/24
 
+private ips:
+master: 10.0.1.11
+worker1:10.0.2.12
+worker2:10.0.2.13
 
 We'll use:
 - 1 Master node in the public subnet.
