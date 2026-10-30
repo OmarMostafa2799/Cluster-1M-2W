@@ -13,3 +13,24 @@ How the communication works:
 3. Workers communicate with the master using its private IP.
 4. Workers download packages through a NAT Gateway (or another configured outbound route).
 5. You deploy applications to the workers.
+
+
+
+
+2. Inbound Rules
+Configure the following rules:
+Type / Port	Protocol	Source	Purpose
+SSH (22)	TCP	Your public IP /32	SSH access
+Custom TCP (6443)	TCP	k8s-cluster-sg	Kubernetes API Server
+Custom TCP (2379-2380)	TCP	k8s-cluster-sg	etcd
+Custom TCP (10250)	TCP	k8s-cluster-sg	Kubelet API
+Custom TCP (10257)	TCP	k8s-cluster-sg	Controller Manager
+Custom TCP (10259)	TCP	k8s-cluster-sg	Scheduler
+Custom TCP (30000-32767)	TCP	Required clients	NodePort services
+Custom UDP (4789)	UDP	k8s-cluster-sg	Calico VXLAN (if enabled)
+
+
+3. Outbound Rules
+Allow all outbound traffic:
+Type	Protocol	Port	Destination
+All traffic	All	All	0.0.0.0/0
